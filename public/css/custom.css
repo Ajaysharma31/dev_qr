@@ -4,3 +4,27 @@
 .mr-8{
     margin-right: 8px;
 }
+
+.flex-custom{
+    display: flex;
+}
+
+.justify-between-custom{
+    justify-content: space-between;
+}
+
+.items-center-custom{
+    align-items: center;
+}
+
+.mab-1-custom{
+    margin-bottom: 10px;
+}
+
+.mb-2-custom {
+    margin-bottom: 20px;
+}
+
+.c-p{
+    cursor: pointer;
+}

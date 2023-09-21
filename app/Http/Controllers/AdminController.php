@@ -11,8 +11,9 @@ class AdminController extends Controller
         return view('admin.dashboard');
     }
 
-    public function store()
+    public function store(Request $request)
     {
+        dd($request->all());
     }
 
     public function getUserDetails()
