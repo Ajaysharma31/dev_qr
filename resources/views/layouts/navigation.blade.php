@@ -13,13 +13,13 @@
                 <!-- Navigation Links -->
                 @if (Auth::user()->role == 'admin')
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('dashboard')">
+                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('admin.manage.user')" :active="request()->routeIs('dashboard')">
+                        <x-nav-link :href="route('admin.manage.user')" :active="request()->routeIs('admin.manage.user')">
                             {{ __('User Management') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('admin.attendance.record')" :active="request()->routeIs('dashboard')">
+                        <x-nav-link :href="route('admin.attendance.record')" :active="request()->routeIs('admin.attendance.record')">
                             {{ __('View Report') }}
                         </x-nav-link>
                     </div>

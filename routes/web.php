@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,11 +20,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('login');
 });
 
-Route::get('/dashboard2', function () {
-    return view('dashboard');
+Route::get('/dashboard', function () {
+    if (Auth::user()->role == 'admin') {
+        return redirect('admin.dashboard');
+    } else {
+        return redirect('/user/dashboard');
+    }
 })->middleware(['auth', 'verified'])->name('dashboard2');
 
 Route::middleware('auth')->group(function () {
@@ -36,10 +43,13 @@ Route::middleware(['auth', 'role:admin'])->name('admin.')->group(function () {
     Route::get('/admin/manage-user', [AdminController::class, 'getUserDetails'])->name('manage.user');
     Route::post('/admin/user-update', [AdminController::class, 'userUpdate'])->name('user.update');
     Route::get('admin/attendance-record', [AdminController::class, 'attendanceRecord'])->name('attendance.record');
+    Route::get('/generate-qr-code', [QrCodeController::class, 'generateAndDownloadQrCode']);
+    Route::post('admin/register', [RegisteredUserController::class, 'store'])->name('register');
 });
 
-Route::middleware(['role:user'])->group(function () {
+Route::middleware(['role:user', 'auth'])->group(function () {
     Route::get('/user/dashboard', [UserController::class, 'index'])->name('dashboard');
+    Route::post('/user/attendance', [UserController::class, 'markAttendance']);
 });
 
 Route::get('/404', function () {

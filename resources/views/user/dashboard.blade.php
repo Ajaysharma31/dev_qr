@@ -37,6 +37,7 @@
                                                     <center>
                                                         <p class="login-box-msg"> <i
                                                                 class="glyphicon glyphicon-qrcode"></i> Scan QR Code</p>
+                                                        {{-- <p id="status-message">the is status message</p> --}}
                                                     </center>
                                                     <video id="preview" width="100%" height="50%"
                                                         style="border-radius:10px;"></video>
@@ -67,20 +68,26 @@
                                                             <thead>
                                                                 <tr>
                                                                     <td>NAME</td>
-                                                                    <td>GATE ID</td>
-                                                                    <td>TIME IN</td>
-                                                                    <td>TIME OUT</td>
+                                                                    <td>Qr ID</td>
+                                                                    <td>Working Hours</td>
                                                                     <td>LOGDATE</td>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <tr>
-                                                                    <td>Name</td>
-                                                                    <td>Sub field</td>
-                                                                    <td>Sub field</td>
-                                                                    <td>Sub field</td>
-                                                                    <td>Sub field</td>
-                                                                </tr>
+                                                                {{-- {{ dd($Atnd_data) }} --}}
+                                                                @forelse ($Atnd_data as $AtndData)
+                                                                    <tr>
+                                                                        <td>{{ ucfirst($AtndData['name']) }}</td>
+                                                                        <td>{{ $AtndData['attendance_ID'] }}</td>
+                                                                        <td>{{ $AtndData['totalWorkingTime'] }}</td>
+                                                                        <td>{{ $AtndData['create_at'] }}</td>
+                                                                    </tr>
+                                                                @empty
+                                                                    <tr>
+                                                                        <td colspan="4" style="text-align: center;">
+                                                                            No Record for Today</td>
+                                                                    </tr>
+                                                                @endforelse
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -98,9 +105,12 @@
     </div>
 
     <script>
+        // EventListner for opening the camera
         document.getElementById('open-scanner').addEventListener('click', markAttendance);
+        // EventListner for closing the camera
         document.getElementById('close-scanner').addEventListener('click', closeCamera);
 
+        // creating an instance of the class scanner for opening and closing the camera
         function createInstance() {
             // Select the video element for displaying the camera feed
             const videoElement = document.getElementById('preview');
@@ -109,10 +119,11 @@
             });
             return scanner;
         }
+        // defining a variable to store the current active instance of the Scanner class. 
         var camScanner;
 
+        // below function is for marking the attendance
         function markAttendance() {
-
             camScanner = createInstance();
             // Get available cameras and start the scanner
             Instascan.Camera.getCameras()
@@ -120,6 +131,29 @@
                     if (cameras.length > 0) {
                         // Start the scanner with the first available camera
                         camScanner.start(cameras[0]);
+                        // get qrcode value from scan event
+                        camScanner.addListener('scan', function(content) {
+                            console.log(content);
+                            alert("scanned " + content);
+                            $.ajax({
+                                type: "POST",
+                                url: "/user/attendance",
+                                data: {
+                                    _token: "{{ csrf_token() }}",
+                                    qrCodeNumber: content
+                                },
+                                success: function(response) {
+                                    console.log(response);
+                                    // swal(response.head, response.message)
+                                    Swal.fire({
+                                        icon: response.head,
+                                        title: response.message,
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    })
+                                }
+                            });
+                        });
                     } else {
                         alert('No cameras found');
                     }
@@ -128,31 +162,11 @@
                     console.error(error);
                 });
         }
-
         // Function to close the camera
         function closeCamera() {
             // Stop the scanner
             camScanner.stop();
         }
-
-        // Add an event listener for when a QR code is scanned
-        scanner.addListener('scan', function(content) {
-            // Populate a form field with the scanned content
-            const textField = document.getElementById('text');
-            if (textField) {
-                textField.value = content;
-            } else {
-                alert('Text field not found');
-            }
-
-            // Submit the form (assuming it's the first form on the page)
-            const firstForm = document.forms[0];
-            if (firstForm) {
-                firstForm.submit();
-            } else {
-                alert('Form not found');
-            }
-        });
     </script>
 
 </x-app-layout>
