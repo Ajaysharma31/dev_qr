@@ -18,7 +18,7 @@
             <div class="col-md-6 text-center">
                 <h1 class="display-4">404 - Page Not Found</h1>
                 <p class="lead">Sorry, the page you are looking for does not exist.</p>
-                <a href="{{ route('home') }}" class="btn btn-primary">Go to Home</a>
+                <a href="{{ route('login') }}" class="btn btn-primary">Go to Home</a>
                 <!-- Add any additional content or Bootstrap components here -->
             </div>
         </div>

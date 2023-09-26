@@ -77,10 +77,11 @@
                                                                 {{-- {{ dd($Atnd_data) }} --}}
                                                                 @forelse ($Atnd_data as $AtndData)
                                                                     <tr>
-                                                                        <td>{{ ucfirst($AtndData['name']) }}</td>
-                                                                        <td>{{ $AtndData['attendance_ID'] }}</td>
-                                                                        <td>{{ $AtndData['totalWorkingTime'] }}</td>
-                                                                        <td>{{ $AtndData['create_at'] }}</td>
+                                                                        <td>{{ ucfirst($AtndData['name']) ?? '' }}</td>
+                                                                        <td>{{ $AtndData['attendance_ID'] ?? '' }}</td>
+                                                                        <td>{{ $AtndData['totalWorkingTime'] ?? '' }}
+                                                                        </td>
+                                                                        <td>{{ $AtndData['create_at'] ?? '' }}</td>
                                                                     </tr>
                                                                 @empty
                                                                     <tr>
@@ -144,13 +145,13 @@
                                 },
                                 success: function(response) {
                                     console.log(response);
-                                    // swal(response.head, response.message)
-                                    Swal.fire({
-                                        icon: response.head,
-                                        title: response.message,
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    })
+                                    swal(response.head, response.message)
+                                    // Swal.fire({
+                                    //     icon: response.head,
+                                    //     title: response.message,
+                                    //     showConfirmButton: false,
+                                    //     timer: 1500
+                                    // })
                                 }
                             });
                         });

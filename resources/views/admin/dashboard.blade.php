@@ -16,31 +16,27 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">First</th>
-                                    <th scope="col">Last</th>
-                                    <th scope="col">In Time</th>
-                                    <th scope="col">Out Time</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Total Time</th>
+                                    <th scope="col">Date</th>
 
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td colspan="2">Larry the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
+                                @forelse ($Atnd_data as $AtndData)
+                                    <tr>
+                                        <th scope="row">{{ $loop->iteration }}</th>
+                                        <td>{{ ucfirst($AtndData['user']['name']) }}</td>
+                                        <td>{{ $AtndData['user']['email'] }}</td>
+                                        <td>{{ $AtndData['totalWorkingTime'] }}</td>
+                                        <td>{{ $AtndData['created_at'] }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" style="text-align:center;">No Record for Today</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>

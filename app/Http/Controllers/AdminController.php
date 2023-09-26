@@ -11,7 +11,30 @@ class AdminController extends Controller
 {
     public function index()
     {
-        return view('admin.dashboard');
+        $date = date('Y-m-d');
+        $Atnd_data = [];
+        $users = User::select('id', 'name', 'email')->where('role', 'user')->with('attendance')->whereDate('created_at', $date)->get();
+
+        foreach ($users as $user) {
+            $t_w_hours = 0;
+            foreach ($user->attendance as $attend) {
+                $inTime = Carbon::parse($attend->in_time);
+                $outTime = Carbon::parse($attend->out_time);
+                $diff = $inTime->diff($outTime);
+                $workingHours = $diff->days * 24 + $diff->h + ($diff->i / 60) + ($diff->s / 3600);
+                $t_w_hours += $workingHours;
+            }
+            $interval = $this->convertToReadableDate($t_w_hours);
+            // dd($interval->forHumans());
+            if ($interval->forHumans() != "1 second") {
+                $Atnd_data[] = [
+                    'user' => $user,
+                    'totalWorkingTime' => $interval->forHumans(),
+                    'created_at' => $attend->created_at->format('d-m-Y (l)'),
+                ];
+            }
+        }
+        return view('admin.dashboard', compact('Atnd_data'));
     }
 
     public function store(Request $request)

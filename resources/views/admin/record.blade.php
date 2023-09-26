@@ -26,7 +26,7 @@
                                 @forelse ($Atnd_data as $atndData)
                                     {{-- {{ dd($atndData) }} --}}
                                     <tr>
-                                        <th scope="row">1</th>
+                                        <th scope="row">{{ $loop->iteration }}</th>
                                         <td>{{ ucfirst($atndData['user']['name']) }}</td>
                                         <td>{{ $atndData['user']['email'] }}</td>
                                         <td>{{ $atndData['totalWorkingTime'] }}</td>

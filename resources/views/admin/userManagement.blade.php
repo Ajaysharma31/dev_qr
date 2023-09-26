@@ -32,7 +32,7 @@
                             <tbody>
                                 @forelse ($userDatas as $userData)
                                     <tr>
-                                        <th scope="row">1</th>
+                                        <th scope="row">{{ $loop->iteration }}</th>
                                         <td>{{ $userData->name }}</td>
                                         <td>{{ $userData->email }}</td>
                                         <td>{{ $userData->qrcode }}</td>
